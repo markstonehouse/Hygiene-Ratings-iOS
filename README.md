@@ -16,3 +16,9 @@ An iOS mobile application used to search and display hygiene ratings of venues a
   - [ ] Add unit tests to test code.
   - [ ] Add tests to test UI elements and functionality.
   - [ ] Test functionality on numerous screensizes, I.e. various mobile screen sizes, tablets.
+
+## Screenshots
+![](HygieneRating/Assets.xcassets/Screenshots/NearestList.png)
+![](HygieneRating/Assets.xcassets/Screenshots/BusinessDetails.png)
+![](HygieneRating/Assets.xcassets/Screenshots/SearchPostcode.png)
+![](HygieneRating/Assets.xcassets/Screenshots/NearestMap.png)
