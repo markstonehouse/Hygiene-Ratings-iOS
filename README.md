@@ -5,7 +5,7 @@
 An iOS mobile application used to search and display hygiene ratings of venues across the United Kingdom.
 
 ## Functionality
-- Display nearest 20 venues to the user's location displayed on a map or in a list view. 
+- Display nearest 25 venues to the user's location displayed on a map or in a list view. 
 - Venues are searchable by business name and postcode by using the search feature.
 - Detailed view of venue information and directions from user location.
 
