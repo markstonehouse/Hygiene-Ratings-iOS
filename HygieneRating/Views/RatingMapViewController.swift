@@ -9,26 +9,30 @@
 import UIKit
 import MapKit
 
+/*
+ * RatingMapViewController
+ * Calls API and displays a the nearest 25 venues to the device's location on a map.
+ */
 class RatingMapViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var ratingLocationMap: MKMapView!
-    private var userAnnotation: MapAnnotation!
+    private var userAnnotation: MapAnnotation!  /** User's annotation for map view. */
     
-    private let locationManager = LocationDAO()
+    /** Variables for user location and locationDAO. */
     private var currentLocation: CLLocation!
+    private let locationManager = LocationDAO()
     
-    private var allTheRatings = [Rating]()
+    private var allTheRatings = [Rating]()  /** Array list storing all rating values retrieved from API request. */
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currentLocation = locationManager.getLatestDeviceLocation()
+        currentLocation = locationManager.getLatestDeviceLocation()     /** Get current location of device. */
         
-        performAPICall(op: "s_loc", parameters: "lat=\(currentLocation.coordinate.latitude)&long=\(currentLocation.coordinate.longitude)")
-        
-        centerMapOnLocation(location: currentLocation)
-    }
+        updateMapWithRecords()
+    }   // viewDidLoad()
     
+     /* Responsible for appending default pins to custom assigned pins on map view. */
     internal func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !annotation.isKind(of: MKUserLocation.self) else { return nil }
         let annotationIdentifier = "AnnotationIdentifier"
@@ -45,18 +49,24 @@ class RatingMapViewController: UIViewController, MKMapViewDelegate {
         annotationView!.image = customPinAnnotation.pinImage
         
         return annotationView
-    }
+    }   // mapView(viewFor)
     
+    /* Upon click remove user annotation, get current location of device and update map view with new API results. */
     @IBAction func updateLocationButton(_ sender: Any) {
         ratingLocationMap.removeAnnotation(userAnnotation)
         
-        currentLocation = locationManager.getLatestDeviceLocation()
+        currentLocation = locationManager.getLatestDeviceLocation() /** Get current location of device. */
         
-        performAPICall(op: "s_loc", parameters: "lat=\(currentLocation.coordinate.latitude)&long=\(currentLocation.coordinate.longitude)")
-        
-        centerMapOnLocation(location: currentLocation)
-    }
+        updateMapWithRecords()
+    }   // updateLocationButton()
     
+    /* Center user location on map and perform API call. */
+    private func updateMapWithRecords() {
+        centerMapOnLocation(location: currentLocation)
+        performAPICall(op: "s_loc", parameters: "lat=\(currentLocation.coordinate.latitude)&long=\(currentLocation.coordinate.longitude)")
+    }   // updateMapWithRecords()
+    
+    /* Perform API call and store results in allTheRatings array, then for each value add annotation to map view. */
     private func performAPICall(op: String, parameters: String) {
         let url = URL(string: "http://radikaldesign.co.uk/sandbox/hygiene.php?op=\(op)&\(parameters)")
 
@@ -79,13 +89,9 @@ class RatingMapViewController: UIViewController, MKMapViewDelegate {
                 print("Error: ", err)
             }
         }.resume()
-    }
+    }   // performAPICall()
     
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        let location = CLLocation(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
-        centerMapOnLocation(location: location)
-    }
-    
+    /* Set up and load map. Add user annotation pin to map. */
     private func centerMapOnLocation(location: CLLocation) {
         ratingLocationMap.delegate = self
         
@@ -97,5 +103,5 @@ class RatingMapViewController: UIViewController, MKMapViewDelegate {
         userAnnotation = MapAnnotation(name: "You are here",  distanceKM: nil, pinImageValue: "userPin", coordinate: userLocation)
         
         ratingLocationMap.addAnnotation(userAnnotation)
-    }
+    }   // centerMapOnLocation()
 }

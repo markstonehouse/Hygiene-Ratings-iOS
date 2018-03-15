@@ -9,7 +9,9 @@
 import UIKit
 
 /*
- * Used to handle table view cells.
+ * RatingViewCell
+ * Handles each cell in a table view, used for styling
+ * and placing of data.
  */
 class RatingViewCell: UITableViewCell {
     

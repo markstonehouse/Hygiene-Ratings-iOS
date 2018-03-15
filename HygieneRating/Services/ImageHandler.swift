@@ -8,8 +8,13 @@
 
 import UIKit
 
+/*
+ * ImageHandler
+ * Handles values and returns relevant images from assets.
+ */
 class ImageHandler {
     
+    /* Takes ratingValue string and returns ratingImage from assets. */
     func getRatingImage(ratingValue: String) -> UIImage {
         let ratingImage: UIImage
         
@@ -31,5 +36,5 @@ class ImageHandler {
         }
         
         return ratingImage
-    }
+    }   // getRatingImage()
 }

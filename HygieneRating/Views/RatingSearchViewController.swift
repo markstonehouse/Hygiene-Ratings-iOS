@@ -8,14 +8,19 @@
 
 import UIKit
 
+/*
+ * RatingSearchViewController
+ * Allows user to search venues by business name or postcode and displays results.
+ */
 class RatingSearchViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    /** Setting up of UI elements. */
     @IBOutlet weak var searchField: UISearchBar!
     @IBOutlet weak var searchOption: UISegmentedControl!
     @IBOutlet weak var searchContent: UILabel!      /** Label below search bar stating what has been searched. */
     @IBOutlet weak var searchResultsTableView: UITableView!
     
-    private var allTheResults = [Rating]()
+    private var allTheResults = [Rating]()      /** Array list storing all rating values retrieved from API request. */
     
     private var option: Int = 0     /** Option from segemented control. */
     
@@ -24,10 +29,12 @@ class RatingSearchViewController: UIViewController, UITableViewDataSource, UITab
         
         searchContent.text = ""     /** Set label containing searched value to an empty string. */
         
+        /** Setting up of table view. */
         searchResultsTableView.dataSource = self
         searchResultsTableView.delegate = self
-    }
+    }   // viewDidLoad()
     
+    /* Perform API call and store results in allTheResults array, then load values into table view. */
     private func performAPICall(op: String, parameters: String) {
         let url = URL(string: "http://radikaldesign.co.uk/sandbox/hygiene.php?op=\(op)&\(parameters)")
         
@@ -37,21 +44,15 @@ class RatingSearchViewController: UIViewController, UITableViewDataSource, UITab
             do {
                 self.allTheResults = try JSONDecoder().decode([Rating].self, from: data)
                 
-//                if self.allTheResults.count != 0 {
-                    DispatchQueue.main.async {
-                        self.searchResultsTableView.reloadData()
-                    }
-//                } else {
-//                    for self.allTheResults do {
-//                        
-//                    }
-//                }
+                DispatchQueue.main.async {
+                    self.searchResultsTableView.reloadData()
+                }
                 
             } catch let err {
                 print("Error: ", err)
             }
         }.resume()
-    }
+    }   // performAPICall()
     
     /*
      * Method to check value of segemented control and perform relevant API call from search bar value.
@@ -70,22 +71,25 @@ class RatingSearchViewController: UIViewController, UITableViewDataSource, UITab
                 performAPICall(op: "s_postcode", parameters: "&postcode=\(searchEncoded!)")
             }
         }
-    }
+    }   // searchButton()
     
+     /* Calculates the total amount of rows in table view. */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allTheResults.count
-    }
+    }   // tableView(numberOfRowsInSection)
     
-    
+     /* For each element in the table view add rating image and name to row. */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
         let cell = searchResultsTableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! RatingViewCell
         
+        /** For rating value get rating image from ImageHandler() and append to ratingImage. */
         cell.ratingImage?.image = ImageHandler().getRatingImage(ratingValue: allTheResults[indexPath.row].RatingValue)
         cell.nameLabel?.text = "\(getTableCellText(ratingObject: allTheResults[indexPath.row]))"
         
         return cell
-    }
+    }   // tableView(CellForRowAt)
     
+    /* Get cell values and stylise row of table. */
     private func getTableCellText(ratingObject: Rating) -> String {
         var cellText: String = ""
         
@@ -108,8 +112,9 @@ class RatingSearchViewController: UIViewController, UITableViewDataSource, UITab
         }
         
         return cellText
-    }
+    }   // getTableCellText()
     
+    /* Prepare data for segue - RatingDetailsViewController. */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let cell = sender as? UITableViewCell {
             let i = searchResultsTableView.indexPath(for: cell)!.row
@@ -119,5 +124,5 @@ class RatingSearchViewController: UIViewController, UITableViewDataSource, UITab
                 rdvc.theRating = self.allTheResults[i]
             }
         }
-    }
+    }   // prepare(UIStoryboardSegue)
 }

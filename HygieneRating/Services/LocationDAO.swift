@@ -9,17 +9,23 @@
 import UIKit
 import CoreLocation
 
+/*
+ * LocationDAO
+ * Handles setting up and checking permissions and returns device's location.
+ */
 class LocationDAO: CLLocationManager, CLLocationManagerDelegate {
     
-    private let locationManager = CLLocationManager()
-    
+    /** Variable for user location and locationDAO. */
     private var currentLocation: CLLocation!
+    private let locationManager = CLLocationManager()
     
     override init() {
         super.init()
-    }
+    }   // init()
     
+    /* Performs permission check and sets up locationManager. */
     private func checkForLocationPermissions() -> Bool {
+        /** Send requestWhenInUseAuthorization permission to device. */
         self.locationManager.requestWhenInUseAuthorization()
         
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
@@ -33,8 +39,9 @@ class LocationDAO: CLLocationManager, CLLocationManagerDelegate {
         }
         
         return false
-    }
+    }   // checkForLocationPermissions()
     
+    /* Check permissions are granted and get latest location of device. */
     func getLatestDeviceLocation() -> CLLocation {
         if checkForLocationPermissions() {
             currentLocation = locationManager.location
@@ -44,8 +51,9 @@ class LocationDAO: CLLocationManager, CLLocationManagerDelegate {
         }
 
         return currentLocation
-    }
+    }   // getLatestDeviceLocation()
     
+    /* Takes distanceKM string and returns relevant meter/kilometer value. */
     func locationDistanceFromDevice(distanceKM: String) -> String {
         let convertedNumber = Double(distanceKM)
         var distance = Double(round(1000 * convertedNumber!))
@@ -56,12 +64,13 @@ class LocationDAO: CLLocationManager, CLLocationManagerDelegate {
         }
         
         return "\(String(distance)) meters"
-    }
+    }   // locationDistanceFromDevice()
     
+    /* Takes lat/long values and returns CLLocationCoordinate. */
     func makeCLLocationFromCoordinates(latitude: String, longtitude: String) -> CLLocationCoordinate2D {
         let lat = Double(latitude)
         let long = Double(longtitude)
         
         return CLLocationCoordinate2DMake(lat!, long!)
-    }
+    }   // makeCLLocationFromCoordinates()
 }

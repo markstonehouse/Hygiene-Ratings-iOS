@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ * Rating
+ * Creates codable rating object for parsing of JSON.
+ */
 class Rating: Codable {
     
     let id: String

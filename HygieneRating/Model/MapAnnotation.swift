@@ -8,13 +8,18 @@
 
 import MapKit
 
+/*
+ * MapAnnotation
+ * Annotation object used for placing custom pins on map views.
+ */
 class MapAnnotation: NSObject, MKAnnotation {
     
+    /** Variables used to store map annotation values. */
     var coordinate: CLLocationCoordinate2D
     let title: String?
     let subtitle: String?
     
-    let pinImageValue: String
+    let pinImageValue: String       /** Pin image value used to determine which image to use. */
  
     init(name: String, distanceKM: String?, pinImageValue: String, coordinate: CLLocationCoordinate2D) {
         self.title = name
@@ -23,8 +28,9 @@ class MapAnnotation: NSObject, MKAnnotation {
         self.coordinate = coordinate
         
         super.init()
-    }
+    }   // init()
 
+    /* Takes pinImageValue and returns relevant pinImage from assets. */
     var pinImage: UIImage! {
         let pinImage: UIImage
         
@@ -48,5 +54,5 @@ class MapAnnotation: NSObject, MKAnnotation {
         }
         
         return pinImage
-    }
+    }   // pinImage
 }
